@@ -11,17 +11,26 @@ export interface IReturnedFindPostsObj {
 export const postsRepository = {
     async findPosts(pageNumber: number, pageSize: number, skip: number): Promise<IPost[]> {
         const count = await postsCollection.find({}).count()
-        const foundPosts: IPost[] = await postsCollection
+        const foundPosts: IPost[] = (await postsCollection
             .find({})
             // .skip(skip)
             // .limit(pageSize)
-            .toArray()
+            .toArray())
+            .map(post => ({
+                id: post.id,
+                blogId: post.blogId,
+                title: post.title,
+                shortDescription: post.shortDescription,
+                content: post.content,
+                blogName: post.blogName,
+                createdAt: post.createdAt,
+            }))
 
         return new Promise((resolve) => {
             resolve(foundPosts)
         })
     },
-    async findPostById(id: number): Promise<IPost | null> {
+    async findPostById(id: string): Promise<IPost | null> {
         let post = postsCollection.findOne({id})
         if (post) {
             return post
@@ -35,11 +44,11 @@ export const postsRepository = {
         await postsCollection.insertOne(newPost)
         return newPost
     },
-    async updatePost(id: number,
+    async updatePost(id: string,
                      title: string,
                      shortDescription: string,
                      content: string,
-                     blogId: number): Promise<boolean> {
+                     blogId: string): Promise<boolean> {
         const blog: IBlog | null = await blogsRepository.findBlogById(blogId)
         let result = await postsCollection.updateOne({id}, {
             $set: {
@@ -55,7 +64,7 @@ export const postsRepository = {
         return result.matchedCount === 1
     },
 
-    async deletePost(id: number): Promise<boolean> {
+    async deletePost(id: string): Promise<boolean> {
         const result = await postsCollection.deleteOne({id})
         return result.deletedCount === 1
     }

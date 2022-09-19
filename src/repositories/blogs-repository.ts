@@ -14,9 +14,15 @@ export const blogsRepository = {
         const findObject: any = {}
         if (name) findObject.name = {$regex: name}
         const count = await blogsCollection.find(findObject).count()
-        const foundBloggers: IBlog[] = await blogsCollection
+        const foundBloggers: IBlog[] = (await blogsCollection
             .find(findObject)
-            .toArray()
+            .toArray())
+            .map(blog => ({
+                name: blog.name,
+                youtubeUrl: blog.youtubeUrl,
+                id: blog.id,
+                createdAt: blog.createdAt,
+            }))
         return new Promise((resolve) => {
             resolve(foundBloggers)
         })
