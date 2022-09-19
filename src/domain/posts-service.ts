@@ -19,7 +19,7 @@ export const postsService = {
             content,
             blogId,
             blogName: blog ? blog.name : 'unknown',
-            id: (new Date()).toString(),
+            id: (+(new Date())).toString(),
             createdAt: (new Date()).toISOString()
         }
         return postsRepository.createPost(newPost)
