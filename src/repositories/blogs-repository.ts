@@ -17,12 +17,7 @@ export const blogsRepository = {
         const foundBloggers: IBlog[] = (await blogsCollection
             .find(findObject)
             .toArray())
-            .map(blog => ({
-                name: blog.name,
-                youtubeUrl: blog.youtubeUrl,
-                id: blog.id,
-                createdAt: blog.createdAt,
-            }))
+            // .map(blog => (blog))
         return new Promise((resolve) => {
             resolve(foundBloggers)
         })
