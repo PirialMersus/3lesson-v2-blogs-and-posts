@@ -20,7 +20,7 @@ postsRouter.get('/', async (req: Request<{}, {}, {}, IQuery>, res: Response) => 
         param('postId').trim().not().isEmpty().withMessage('enter postId value in params'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
-            let post: IPost | null = await postsService.findPostById(+req.params.postId)
+            let post: IPost | null = await postsService.findPostById(req.params.postId)
 
             if (post) {
                 res.send(post)
@@ -39,7 +39,7 @@ postsRouter.get('/', async (req: Request<{}, {}, {}, IQuery>, res: Response) => 
         body('shortDescription').isLength({max: 100}).withMessage('shortDescription length should be less then 100'),
         body('blogId').isLength({max: 1000}).withMessage('bloggerId length should be less then 1000'),
         body('blogId').custom(async (value, {req}) => {
-            const isBloggerPresent = await blogsService.findBlogById(+value)
+            const isBloggerPresent = await blogsService.findBlogById(value)
             if (!isBloggerPresent) {
                 throw new Error('incorrect blogger id');
             }
@@ -51,7 +51,7 @@ postsRouter.get('/', async (req: Request<{}, {}, {}, IQuery>, res: Response) => 
             const newPost = await postsService.createPost(req.body.title,
                 req.body.shortDescription,
                 req.body.content,
-                +req.body.blogId)
+                req.body.blogId)
 
             res.status(201).send(newPost)
 
@@ -59,7 +59,7 @@ postsRouter.get('/', async (req: Request<{}, {}, {}, IQuery>, res: Response) => 
     .put('/:id?',
         authMiddleware,
         body('blogId').custom(async (value, {req}) => {
-            const isBloggerPresent = await blogsService.findBlogById(+value)
+            const isBloggerPresent = await blogsService.findBlogById(value)
             if (!isBloggerPresent) {
                 throw new Error('incorrect blogger id');
             }
@@ -79,13 +79,13 @@ postsRouter.get('/', async (req: Request<{}, {}, {}, IQuery>, res: Response) => 
             const title = req.body.title;
             const shortDescription = req.body.shortDescription;
             const content = req.body.content;
-            const blogId = +req.body.blogId;
+            const blogId = req.body.blogId;
 
-            const id = +req.params.id;
+            const id = req.params.id;
 
             const isUpdated: boolean = await postsService.updatePost(id, title, shortDescription, content, blogId)
             if (isUpdated) {
-                const product = await postsService.findPostById(+req.params.id)
+                const product = await postsService.findPostById(req.params.id)
                 res.status(204).send(product)
             } else {
                 errorObj.errorsMessages = [{
@@ -100,7 +100,7 @@ postsRouter.get('/', async (req: Request<{}, {}, {}, IQuery>, res: Response) => 
         param('id').trim().not().isEmpty().withMessage('enter id value in params'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
-            const id = +req.params.id;
+            const id = req.params.id;
 
             const isDeleted = await postsService.deletePost(id)
 
