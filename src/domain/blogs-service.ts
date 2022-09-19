@@ -33,7 +33,7 @@ export const blogsService = {
             id: (+(new Date())).toString(),
             createdAt: (new Date()).toISOString()
         }
-        return blogsRepository.createBlogger(newBlogger)
+        return blogsRepository.createBlog(newBlogger)
     },
     async updateBlog(id: string, name: string, youtubeUrl: string): Promise<boolean> {
         return blogsRepository.updateBlog(id, name, youtubeUrl)

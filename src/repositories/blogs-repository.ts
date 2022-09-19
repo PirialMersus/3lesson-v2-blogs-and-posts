@@ -37,10 +37,11 @@ export const blogsRepository = {
         }
     },
     // have to have return value type
-    async createBlogger(newBlog: IBlog): Promise<IBlog> {
-
+    async createBlog(newBlog: IBlog): Promise<IBlog> {
+        const newBlogCopy = {...newBlog}
         await blogsCollection.insertOne(newBlog)
-        return newBlog
+        console.log('newBlogCopy', newBlogCopy)
+        return newBlogCopy
     },
     async updateBlog(id: string, name: string, youtubeUrl: string): Promise<boolean> {
         let result = await blogsCollection.updateOne({id}, {
