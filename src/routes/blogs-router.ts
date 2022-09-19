@@ -18,7 +18,7 @@ blogsRouter.get('/', async (req: Request<{}, {}, {}, IRequest>, res: Response) =
     const pageNumber = req.query.PageNumber ? +req.query.PageNumber : 1
     const pageSize = req.query.PageSize ? +req.query.PageSize : 10
     const response: IBlog[] = await blogsService.findBlogs(name, pageNumber, pageSize)
-    console.log('response', response)
+    // console.log('response', response)
     res.send(response);
 })
     .get('/:id?',
@@ -38,7 +38,7 @@ blogsRouter.get('/', async (req: Request<{}, {}, {}, IRequest>, res: Response) =
             //     const pageNumber = req.query.PageNumber ? +req.query.PageNumber : 1
             //     const pageSize = req.query.PageSize ? +req.query.PageSize : 10
             // console.log('+req.params.id', +req.params.id)
-            let blog: IBlog | null = await blogsService.findBlogById(+req.params.id)
+            let blog: IBlog | null = await blogsService.findBlogById(req.params.id)
 
             if (blog) {
                 res.send(blog)
@@ -46,14 +46,14 @@ blogsRouter.get('/', async (req: Request<{}, {}, {}, IRequest>, res: Response) =
                 res.send(404)
             }
         })
-    .get('/:bloggerId/posts',
-        param('bloggerId').not().isEmpty().withMessage('enter bloggerId value in params'),
+    .get('/:blogId/posts',
+        param('blogId').not().isEmpty().withMessage('enter blogId value in params'),
         async (req: Request, res: Response) => {
             // lines added
-            let blogger: IBlog | null = await blogsService.findBlogById(+req.params.bloggerId)
+            let blog: IBlog | null = await blogsService.findBlogById(req.params.blogId)
 
-            if (blogger) {
-                res.send(blogger)
+            if (blog) {
+                res.send(blog)
             } else {
                 res.send(404)
             }
@@ -69,16 +69,12 @@ blogsRouter.get('/', async (req: Request<{}, {}, {}, IRequest>, res: Response) =
             if (!regExp.test(req.body.youtubeUrl)) {
                 throw new Error('enter correct value');
             }
-
             return true;
         }),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
-
             const newBlogger = await blogsService.createBlog(req.body.name, req.body.youtubeUrl)
-
             res.status(201).send(newBlogger)
-
         })
     .put('/:id?',
         authMiddleware,
@@ -99,9 +95,9 @@ blogsRouter.get('/', async (req: Request<{}, {}, {}, IRequest>, res: Response) =
             const name = req.body.name;
             const youtubeUrl = req.body.youtubeUrl;
 
-            const isUpdated: boolean = await blogsService.updateBlog(+req.params.id, name, youtubeUrl)
+            const isUpdated: boolean = await blogsService.updateBlog(req.params.id, name, youtubeUrl)
             if (isUpdated) {
-                const blogger = await blogsService.findBlogById(+req.params.id)
+                const blogger = await blogsService.findBlogById(req.params.id)
                 res.status(204).send(blogger)
             } else {
                 errorObj.errorsMessages = [{
@@ -116,7 +112,7 @@ blogsRouter.get('/', async (req: Request<{}, {}, {}, IRequest>, res: Response) =
         param('id').not().isEmpty().withMessage('enter id value in params'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
-            const id = +req.params.id;
+            const id = req.params.id;
             const isDeleted = await blogsService.deleteBlog(id)
 
             if (!isDeleted) {

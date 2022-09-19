@@ -1,6 +1,5 @@
-import {blogsRepository, IReturnedFindBloggersObj} from "../repositories/blogs-repository"
+import {blogsRepository} from "../repositories/blogs-repository"
 import {IBlog} from "../repositories/db"
-import * as core from "express-serve-static-core";
 
 export interface IFindObj {
     name: string,
@@ -24,23 +23,23 @@ export const blogsService = {
         return blogsRepository.findBlogs(findConditionsObj)
     },
 
-    async findBlogById(id: number): Promise<IBlog | null> {
+    async findBlogById(id: string): Promise<IBlog | null> {
         return blogsRepository.findBlogById(id)
     },
     async createBlog(name: string, youtubeUrl: string): Promise<IBlog> {
         const newBlogger = {
             name,
             youtubeUrl,
-            id: +(new Date()),
+            id: (new Date()).toString(),
             createdAt: (new Date()).toISOString()
         }
         return blogsRepository.createBlogger(newBlogger)
     },
-    async updateBlog(id: number, name: string, youtubeUrl: string): Promise<boolean> {
+    async updateBlog(id: string, name: string, youtubeUrl: string): Promise<boolean> {
         return blogsRepository.updateBlog(id, name, youtubeUrl)
     },
 
-    async deleteBlog(id: number): Promise<boolean> {
+    async deleteBlog(id: string): Promise<boolean> {
         return blogsRepository.deleteBlog(id)
     }
 }

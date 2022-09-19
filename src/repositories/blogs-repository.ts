@@ -1,7 +1,5 @@
 import {blogsCollection, IBlog} from "./db";
 import {IFindObj} from "../domain/blogs-service";
-import {FindCursor} from "mongodb";
-import {log} from "util";
 
 export interface IReturnedFindBloggersObj {
     pagesCount: number,
@@ -24,7 +22,7 @@ export const blogsRepository = {
         })
     },
 
-    async findBlogById(id: number): Promise<IBlog | null> {
+    async findBlogById(id: string): Promise<IBlog | null> {
         const blog = blogsCollection.findOne({id})
         if (blog) {
             return blog
@@ -38,14 +36,14 @@ export const blogsRepository = {
         await blogsCollection.insertOne(newBlog)
         return newBlog
     },
-    async updateBlog(id: number, name: string, youtubeUrl: string): Promise<boolean> {
+    async updateBlog(id: string, name: string, youtubeUrl: string): Promise<boolean> {
         let result = await blogsCollection.updateOne({id}, {
             $set: {name, youtubeUrl}
         })
         return result.matchedCount === 1
     },
 
-    async deleteBlog(id: number): Promise<boolean> {
+    async deleteBlog(id: string): Promise<boolean> {
         const result = await blogsCollection.deleteOne({id})
         return result.deletedCount === 1
     }

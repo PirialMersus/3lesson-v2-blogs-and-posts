@@ -1,6 +1,6 @@
 import {blogsRepository} from "../repositories/blogs-repository"
 import {IPost} from "../repositories/db"
-import {IReturnedFindPostsObj, postsRepository} from "../repositories/posts-repository"
+import {postsRepository} from "../repositories/posts-repository"
 
 export const postsService = {
     async findPosts(pageNumber: number, pageSize: number): Promise<IPost[]> {
@@ -11,7 +11,7 @@ export const postsService = {
     async findPostById(id: number): Promise<IPost | null> {
         return postsRepository.findPostById(id)
     },
-    async createPost(title: string, shortDescription: string, content: string, blogId: number): Promise<IPost> {
+    async createPost(title: string, shortDescription: string, content: string, blogId: string): Promise<IPost> {
         const blog = await blogsRepository.findBlogById(blogId)
         const newPost: IPost = {
             title,
@@ -19,7 +19,7 @@ export const postsService = {
             content,
             blogId,
             blogName: blog ? blog.name : 'unknown',
-            id: +(new Date()),
+            id: (new Date()).toString(),
             createdAt: (new Date()).toISOString()
         }
         return postsRepository.createPost(newPost)

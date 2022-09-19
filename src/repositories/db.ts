@@ -3,12 +3,12 @@ import {MongoClient} from 'mongodb'
 export interface IBlog {
     name: string,
     youtubeUrl: string,
-    id: number,
+    id: string,
     createdAt: string
 }
 export interface IPost {
-    id: number,
-    blogId: number,
+    id: string,
+    blogId: string,
     title: string,
     shortDescription: string,
     content: string,
