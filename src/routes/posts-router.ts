@@ -4,6 +4,7 @@ import {errorObj, inputValidatorMiddleware} from "../middlewares/input-validator
 import {IPost} from "../repositories/db";
 import {postsService} from "../domain/posts-service";
 import {blogsService} from "../domain/blogs-service";
+import {authMiddleware} from "../middlewares/auth-middleware";
 export interface IQuery {
     PageNumber: string
     PageSize: string
@@ -28,6 +29,7 @@ postsRouter.get('/', async (req: Request<{}, {}, {}, IQuery>, res: Response) => 
             }
         })
     .post('/',
+        authMiddleware,
         body('title').trim().not().isEmpty().withMessage('enter input value in title field'),
         body('shortDescription').trim().not().isEmpty().withMessage('enter input value in shortDescription field'),
         body('content').trim().not().isEmpty().withMessage('enter input value in content field'),
@@ -55,6 +57,7 @@ postsRouter.get('/', async (req: Request<{}, {}, {}, IQuery>, res: Response) => 
 
         })
     .put('/:id?',
+        authMiddleware,
         body('blogId').custom(async (value, {req}) => {
             const isBloggerPresent = await blogsService.findBlogById(+value)
             if (!isBloggerPresent) {
@@ -93,6 +96,7 @@ postsRouter.get('/', async (req: Request<{}, {}, {}, IQuery>, res: Response) => 
             }
         })
     .delete('/:id?',
+        authMiddleware,
         param('id').trim().not().isEmpty().withMessage('enter id value in params'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {

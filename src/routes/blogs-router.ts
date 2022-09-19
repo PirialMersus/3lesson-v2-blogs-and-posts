@@ -3,6 +3,7 @@ import {body, param} from "express-validator";
 import {blogsService} from '../domain/blogs-service';
 import {errorObj, inputValidatorMiddleware} from "../middlewares/input-validator-middleware";
 import {IBlog} from "../repositories/db";
+import {authMiddleware} from "../middlewares/auth-middleware";
 
 export const blogsRouter = Router({})
 
@@ -47,7 +48,6 @@ blogsRouter.get('/', async (req: Request<{}, {}, {}, IRequest>, res: Response) =
         })
     .get('/:bloggerId/posts',
         param('bloggerId').not().isEmpty().withMessage('enter bloggerId value in params'),
-        inputValidatorMiddleware,
         async (req: Request, res: Response) => {
             // lines added
             let blogger: IBlog | null = await blogsService.findBlogById(+req.params.bloggerId)
@@ -59,6 +59,7 @@ blogsRouter.get('/', async (req: Request<{}, {}, {}, IRequest>, res: Response) =
             }
         })
     .post('/',
+        authMiddleware,
         body('youtubeUrl').not().isEmpty().withMessage('enter input value in youtubeUrl field'),
         body('name').not().isEmpty().withMessage('enter input value in name field'),
         body('youtubeUrl').isLength({max: 100}).withMessage('youtubeUrl length should be less then 100'),
@@ -80,6 +81,7 @@ blogsRouter.get('/', async (req: Request<{}, {}, {}, IRequest>, res: Response) =
 
         })
     .put('/:id?',
+        authMiddleware,
         param('id').trim().not().isEmpty().withMessage('enter id value in params'),
         body('name').not().isEmpty().withMessage('enter input value in name field'),
         body('youtubeUrl').not().isEmpty().withMessage('enter input value in youtubeUrl field'),
@@ -110,6 +112,7 @@ blogsRouter.get('/', async (req: Request<{}, {}, {}, IRequest>, res: Response) =
             }
         })
     .delete('/:id?',
+        authMiddleware,
         param('id').not().isEmpty().withMessage('enter id value in params'),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
