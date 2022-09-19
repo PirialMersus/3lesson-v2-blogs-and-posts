@@ -3,7 +3,6 @@ import {body, param} from "express-validator";
 import {blogsService} from '../domain/blogs-service';
 import {errorObj, inputValidatorMiddleware} from "../middlewares/input-validator-middleware";
 import {IBlog} from "../repositories/db";
-import {IReturnedFindBloggersObj} from "../repositories/blogs-repository";
 
 export const blogsRouter = Router({})
 
@@ -101,7 +100,7 @@ blogsRouter.get('/', async (req: Request<{}, {}, {}, IRequest>, res: Response) =
             const isUpdated: boolean = await blogsService.updateBlog(+req.params.id, name, youtubeUrl)
             if (isUpdated) {
                 const blogger = await blogsService.findBlogById(+req.params.id)
-                res.status(201).send(blogger)
+                res.status(204).send(blogger)
             } else {
                 errorObj.errorsMessages = [{
                     message: 'Required blogger not found',

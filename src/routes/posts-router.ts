@@ -4,7 +4,6 @@ import {errorObj, inputValidatorMiddleware} from "../middlewares/input-validator
 import {IPost} from "../repositories/db";
 import {postsService} from "../domain/posts-service";
 import {blogsService} from "../domain/blogs-service";
-import {IReturnedFindPostsObj} from "../repositories/posts-repository";
 export interface IQuery {
     PageNumber: string
     PageSize: string
@@ -84,7 +83,7 @@ postsRouter.get('/', async (req: Request<{}, {}, {}, IQuery>, res: Response) => 
             const isUpdated: boolean = await postsService.updatePost(id, title, shortDescription, content, blogId)
             if (isUpdated) {
                 const product = await postsService.findPostById(+req.params.id)
-                res.status(201).send(product)
+                res.status(204).send(product)
             } else {
                 errorObj.errorsMessages = [{
                     message: 'Required post not found',
