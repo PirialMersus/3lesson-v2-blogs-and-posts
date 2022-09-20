@@ -31,9 +31,14 @@ export const blogsRepository = {
     },
 
     async findBlogById(id: string): Promise<IBlog | null> {
-        const blog = blogsCollection.findOne({id})
+        const blog = await blogsCollection.findOne({id})
         if (blog) {
-            return blog
+            return ({
+                name: blog.name,
+                youtubeUrl: blog.youtubeUrl,
+                id: blog.id,
+                createdAt: blog.createdAt,
+            })
         } else {
             return null
         }
