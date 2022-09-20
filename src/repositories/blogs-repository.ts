@@ -39,10 +39,9 @@ export const blogsRepository = {
         }
     },
     // have to have return value type
-    async createBlog(newBlog: IBlog): IBlog {
+    async createBlog(newBlog: IBlog): Promise<IBlog | null>  {
         await blogsCollection.insertOne(newBlog)
-        const foundBlog = await blogsCollection.findOne({id: newBlog.id}, {projection: {_id: 0}})
-        return foundBlog
+        return blogsCollection.findOne({id: newBlog.id}, {projection: {_id: 0}})
     },
     async updateBlog(id: string, name: string, youtubeUrl: string): Promise<boolean> {
         let result = await blogsCollection.updateOne({id}, {
