@@ -11,7 +11,7 @@ export const postsService = {
     async findPostById(id: string): Promise<IPost | null> {
         return postsRepository.findPostById(id)
     },
-    async createPost(title: string, shortDescription: string, content: string, blogId: string): Promise<IPost> {
+    async createPost(title: string, shortDescription: string, content: string, blogId: string): Promise<IPost | null> {
         const blog = await blogsRepository.findBlogById(blogId)
         const newPost: IPost = {
             title,

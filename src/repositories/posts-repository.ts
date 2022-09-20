@@ -31,7 +31,7 @@ export const postsRepository = {
         })
     },
     async findPostById(id: string): Promise<IPost | null> {
-        let post = postsCollection.findOne({id})
+        let post = postsCollection.findOne({id},{projection: {_id: 0}})
         if (post) {
             return post
         } else {
@@ -39,9 +39,9 @@ export const postsRepository = {
         }
     },
     // have to have return value type
-    async createPost(newPost: IPost): Promise<IPost> {
+    async createPost(newPost: IPost): Promise<IPost | null> {
         await postsCollection.insertOne(newPost)
-        return newPost
+        return postsCollection.findOne({id: newPost.id},{projection: {_id: 0}})
     },
     async updatePost(id: string,
                      title: string,
