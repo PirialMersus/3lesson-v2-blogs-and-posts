@@ -73,8 +73,9 @@ blogsRouter.get('/', async (req: Request<{}, {}, {}, IRequest>, res: Response) =
         }),
         inputValidatorMiddleware,
         async (req: Request, res: Response) => {
-            const newBlogger = await blogsService.createBlog(req.body.name, req.body.youtubeUrl)
-            res.status(201).send(newBlogger)
+            const newBlog = await blogsService.createBlog(req.body.name, req.body.youtubeUrl)
+            console.log('newBlog', newBlog)
+            res.status(201).send(newBlog)
         })
     .put('/:id?',
         authMiddleware,

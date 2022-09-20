@@ -40,9 +40,9 @@ export const postsRepository = {
     },
     // have to have return value type
     async createPost(newPost: IPost): Promise<IPost> {
-
+        const postCopy = {...newPost}
         await postsCollection.insertOne(newPost)
-        return newPost
+        return postCopy
     },
     async updatePost(id: string,
                      title: string,
