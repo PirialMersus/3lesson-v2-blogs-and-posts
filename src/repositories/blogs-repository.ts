@@ -20,7 +20,7 @@ export const blogsRepository = {
             .map(blog => (
                 {
                     name: blog.name,
-                    youtubeUrl: blog.youtubeUrl,
+                    youtubeUrl: blog.name,
                     id: blog.id,
                     createdAt: blog.createdAt,
                 }
@@ -31,15 +31,9 @@ export const blogsRepository = {
     },
 
     async findBlogById(id: string): Promise<IBlog | null> {
-        const blog = await blogsCollection.findOne({id})
-        console.log('blog', blog)
+        const blog = blogsCollection.findOne({id})
         if (blog) {
-            return ({
-                name: blog.name,
-                youtubeUrl: blog.youtubeUrl,
-                id: blog.id,
-                createdAt: blog.createdAt,
-            })
+            return blog
         } else {
             return null
         }
