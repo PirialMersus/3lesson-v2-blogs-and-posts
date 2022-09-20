@@ -26,7 +26,7 @@ export const blogsService = {
     async findBlogById(id: string): Promise<IBlog | null> {
         return blogsRepository.findBlogById(id)
     },
-    async createBlog(name: string, youtubeUrl: string): Promise<IBlog> {
+    async createBlog(name: string, youtubeUrl: string): Promise<IBlog | null> {
         const newBlogger = {
             name,
             youtubeUrl,
