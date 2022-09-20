@@ -31,7 +31,7 @@ export const blogsRepository = {
     },
 
     async findBlogById(id: string): Promise<IBlog | null> {
-        const blog = blogsCollection.findOne({id})
+        const blog = blogsCollection.findOne({id}, {projection: {_id: 0}})
         if (blog) {
             return blog
         } else {
@@ -39,9 +39,10 @@ export const blogsRepository = {
         }
     },
     // have to have return value type
-    async createBlog(newBlog: IBlog): Promise<IBlog> {
+    async createBlog(newBlog: IBlog): IBlog {
         await blogsCollection.insertOne(newBlog)
-        return newBlog
+        const foundBlog = await blogsCollection.findOne({id: newBlog.id}, {projection: {_id: 0}})
+        return foundBlog
     },
     async updateBlog(id: string, name: string, youtubeUrl: string): Promise<boolean> {
         let result = await blogsCollection.updateOne({id}, {
