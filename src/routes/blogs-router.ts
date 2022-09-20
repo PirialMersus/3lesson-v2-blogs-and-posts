@@ -66,6 +66,7 @@ blogsRouter.get('/', async (req: Request<{}, {}, {}, IRequest>, res: Response) =
         body('name').isLength({max: 15}).withMessage('name length should be less then 15'),
         body('youtubeUrl').custom((value, {req}) => {
             const regExp = new RegExp("https://([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(/[a-zA-Z0-9_-]+)*/?$");
+            if (!req.body.youtubeUrl.trim()) return
             if (!regExp.test(req.body.youtubeUrl)) {
                 throw new Error('enter correct value');
             }
